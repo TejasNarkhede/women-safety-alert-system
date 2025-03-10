@@ -1,35 +1,37 @@
 package com.tejas.safetyalertbackend.service;
 
+import com.tejas.safetyalertbackend.config.TwilioConfig;
 import com.twilio.Twilio;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
 import com.twilio.rest.api.v2010.account.Message;
 
 @Service
 public class TwilioService {
 
-    @Value("${TWILIO_ACCOUNT_SID}")
-    private String accountSid;
+    private final TwilioConfig twilioConfig;
 
-    @Value("${TWILIO_AUTH_TOKEN}")
-    private String authToken;
-
-    @Value("${TWILIO_PHONE_NUMBER}")
-    private String twilioPhoneNumber;
-
-    public void sendSms(String to, String messageBody) {
-        Twilio.init(accountSid, authToken);
-        Message.creator(
-                new com.twilio.type.PhoneNumber(to),
-                new com.twilio.type.PhoneNumber(twilioPhoneNumber),
-                messageBody).create();
+    public TwilioService(TwilioConfig twilioConfig) {
+        this.twilioConfig = twilioConfig;
+        Twilio.init(twilioConfig.getAccountSid(), twilioConfig.getAuthToken());
     }
 
-    public void sendWhatsApp(String to, String messageBody) {
-        Twilio.init(accountSid, authToken);
-        Message.creator(
-                new com.twilio.type.PhoneNumber("whatsapp:" + to.trim()),
-                new com.twilio.type.PhoneNumber("whatsapp:" + twilioPhoneNumber.trim()),
+    public String sendSms(String to, String messageBody) {
+        // Twilio.init(accountSid, authToken);
+        Message message = Message.creator(
+                new com.twilio.type.PhoneNumber(to),
+                new com.twilio.type.PhoneNumber(twilioConfig.getPhoneNumber()),
                 messageBody).create();
+
+                return message.getSid();
+    }
+
+    public String sendWhatsApp(String to, String messageBody) {
+        // Twilio.init(accountSid, authToken);
+        Message message = Message.creator(
+                new com.twilio.type.PhoneNumber("whatsapp:" + to.trim()),
+                new com.twilio.type.PhoneNumber("whatsapp:" + twilioConfig.getPhoneNumber().trim()),
+                messageBody).create();
+
+                return message.getSid();
     }
 }

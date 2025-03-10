@@ -21,16 +21,16 @@ public class SOSController {
     }
 
     @PostMapping("/sms")
-    public ResponseEntity<String> sendSmsAlert(@RequestParam String phoneNumber,
+    public ResponseEntity<String> sendSmsAlert(@RequestParam String to,
             @RequestParam String message) {
-        twilioService.sendSms(phoneNumber, message);
+        twilioService.sendSms(to, message);
         return ResponseEntity.ok("SOS Alert Sent via SMS!");
     }
 
     @PostMapping("/whatsapp")
-    public ResponseEntity<String> sendWhatsAppAlert(@RequestParam String phoneNumber,
+    public ResponseEntity<String> sendWhatsAppAlert(@RequestParam String to,
             @RequestParam String message) {
-        twilioService.sendWhatsApp(phoneNumber, message);
+        twilioService.sendWhatsApp(to, message);
         return ResponseEntity.ok("SOS Alert Sent via WhatsApp!");
     }
 
