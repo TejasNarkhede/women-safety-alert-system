@@ -8,17 +8,21 @@ import com.tejas.safetyalertbackend.repository.EmergencyContactRepository;
 @Service
 public class EmergencyContactService {
 
-    private EmergencyContactRepository repo;
+    private EmergencyContactRepository contactRepository;
 
     EmergencyContactService(EmergencyContactRepository repo) {
-        this.repo = repo;
+        this.contactRepository = repo;
     }
 
     public EmergencyContact addContact(EmergencyContact contact) {
-        return repo.save(contact);
+        return contactRepository.save(contact);
     }
 
-    public List<EmergencyContact> getContacts(String userPhoneNumber) {
-        return repo.findByUserPhoneNumber(userPhoneNumber);
+    public List<EmergencyContact> getUserContacts(Long userId) {
+        return contactRepository.findByUserId(userId);
+    }
+
+    public void deleteContact(Long id) {
+        contactRepository.deleteById(id);
     }
 }

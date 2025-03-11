@@ -8,7 +8,5 @@ import com.tejas.safetyalertbackend.entity.EmergencyContact;
 
 @Repository
 public interface EmergencyContactRepository extends JpaRepository<EmergencyContact, Long> {
-    
-    @Query("SELECT e FROM EmergencyContact e WHERE e.userPhoneNumber = :userPhoneNumber")
-    List<EmergencyContact> findByUserPhoneNumber(String userPhoneNumber);
+    List<EmergencyContact> findByUserId(Long userId);
 }

@@ -1,4 +1,4 @@
-package com.tejas.safetyalertbackend.dto;
+package com.tejas.safetyalertbackend.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
