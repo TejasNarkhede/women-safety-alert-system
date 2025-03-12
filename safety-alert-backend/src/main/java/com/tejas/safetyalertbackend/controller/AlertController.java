@@ -1,15 +1,13 @@
 package com.tejas.safetyalertbackend.controller;
 
+import com.tejas.safetyalertbackend.entity.AlertHistory;
 import com.tejas.safetyalertbackend.entity.AlertRequest;
 import com.tejas.safetyalertbackend.entity.EmergencyContact;
+import com.tejas.safetyalertbackend.service.AlertHistoryService;
 import com.tejas.safetyalertbackend.service.EmailService;
 import com.tejas.safetyalertbackend.service.EmergencyContactService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -21,10 +19,12 @@ public class AlertController {
 
     private final EmailService emailService;
     private final EmergencyContactService contactService;
+    private final AlertHistoryService alertHistoryService;
 
-    AlertController(EmailService emailService, EmergencyContactService contactService) {
+    AlertController(EmailService emailService, EmergencyContactService contactService, AlertHistoryService alertHistoryService) {
         this.emailService = emailService;
         this.contactService = contactService;
+        this.alertHistoryService = alertHistoryService;
     }
 
     @PostMapping("/email")
@@ -40,6 +40,17 @@ public class AlertController {
                     "Message: " + alertRequest.getMessage()
             );
         }
+
+        AlertHistory alertHistory = new AlertHistory();
+        alertHistory.setUserId(alertRequest.getUserId());
+        alertHistory.setMessage(alertRequest.getMessage());
+        alertHistoryService.saveAlertHistory(alertHistory);
+
         return ResponseEntity.ok("Emergency alert sent successfully!");
+    }
+
+    @GetMapping("/history/{userId}")
+    public ResponseEntity<List<AlertHistory>> getAlertHistory(@PathVariable Long userId) {
+        return ResponseEntity.ok(alertHistoryService.getUserAlertHistory(userId));
     }
 }

@@ -1,61 +1,50 @@
-import { React, useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const SendAlert = () => {
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [message, setMessage] = useState("");
+  const [contacts, setContacts] = useState([]);
+  const [message, setMessage] = useState("Emergency! Please help!");
   const [loading, setLoading] = useState(false);
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    if (user) {
+      fetchContacts();
+    }
+  }, []);
+
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/contacts/${user.id}`);
+      setContacts(response.data);
+    } catch (error) {
+      console.error("Error fetching contacts", error);
+    }
+  };
+
+  const sendAlert = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setResponse(null);
-
-    if (!/^[0-9]{10,15}$/.test(phoneNumber)) {
-      setError("Invalid phone number. It should be 10-15 digits.");
-      setLoading(false);
-      return;
-    }
-
     try {
-      const res = await fetch(
-        `http://localhost:8080/sos/whatsapp?phoneNumber=${encodeURIComponent(
-          phoneNumber
-        )}&message=${encodeURIComponent(message)}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const data = await res.text(); // backend returns plain text, not JSON
-
-      if (!res.ok) {
-        throw new Error(data || "Failed to send alert");
-      }
-      setResponse(data);
+      await axios.post("http://localhost:8080/alerts/email", {
+        userId: user.id,
+        message,
+      });
+      alert("Emergency alert sent successfully!");
     } catch (error) {
-      setError(error.message);
+      console.error("Error sending alert", error);
     }
     setLoading(false);
   };
 
+
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-xl font-bold mb-4">Send Emergency Alert</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          className="w-full p-2 border rounded"
-          placeholder="Enter Phone Number"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-          required
-        />
+      <form onSubmit={sendAlert} className="space-y-4">
         <textarea
           className="w-full p-2 border rounded"
-          placeholder="Enter Message"
+          placeholder="Enter Emergency Message"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           required
@@ -68,8 +57,14 @@ const SendAlert = () => {
           {loading ? "Sending..." : "Send Alert"}
         </button>
       </form>
-      {error && <p className="mt-4 text-red-600">{error}</p>}
-      {response && <p className="mt-4 text-green-600">{response}</p>}
+      <h3 className="text-lg font-bold mt-6">Emergency Contacts:</h3>
+      <ul className="mt-4 space-y-2">
+        {contacts.map((contact) => (
+          <li key={contact.id} className="bg-gray-100 p-2 rounded">
+            {contact.contactName} - {contact.contactEmail}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
