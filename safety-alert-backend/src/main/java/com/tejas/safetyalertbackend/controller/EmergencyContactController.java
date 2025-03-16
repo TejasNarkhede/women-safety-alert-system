@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tejas.safetyalertbackend.entity.EmergencyContact;
-import com.tejas.safetyalertbackend.model.EmergencyContactDTO;
 import com.tejas.safetyalertbackend.service.EmergencyContactService;
 
 @RestController

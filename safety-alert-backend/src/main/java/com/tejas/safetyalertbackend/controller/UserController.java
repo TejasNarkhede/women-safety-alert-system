@@ -1,12 +1,9 @@
 package com.tejas.safetyalertbackend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 import com.tejas.safetyalertbackend.entity.User;
 import com.tejas.safetyalertbackend.service.UserService;
@@ -16,8 +13,11 @@ import com.tejas.safetyalertbackend.service.UserService;
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
-    @Autowired
     private UserService userService;
+
+    UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user) {
@@ -36,5 +36,23 @@ public class UserController {
         }
         return ResponseEntity.badRequest().body("Invalid email or password!");
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateUser(@RequestBody User updatedUser) {
+        User existingUser = userService.findByEmail(updatedUser.getEmail());
+        if(existingUser == null) return ResponseEntity.badRequest().body("User not found");
+        if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
+            existingUser.setName(updatedUser.getName());
+        }
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            existingUser.setPassword(encoder.encode(updatedUser.getPassword()));
+        }
+        userService.saveUser(existingUser);
+        return ResponseEntity.ok("Profile updated successfully!");
+    }
+
+
+
 
 }
