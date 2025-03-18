@@ -15,28 +15,48 @@ const SendAlert = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/contacts/${user.id}`);
+      const response = await axios.get(
+        `http://localhost:8080/contacts/${user.id}`
+      );
       setContacts(response.data);
     } catch (error) {
       console.error("Error fetching contacts", error);
     }
   };
 
-  const sendAlert = async (e) => {
+  const sendAlert = (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      await axios.post("http://localhost:8080/alerts/email", {
-        userId: user.id,
-        message,
-      });
-      alert("Emergency alert sent successfully!");
-    } catch (error) {
-      console.error("Error sending alert", error);
-    }
-    setLoading(false);
-  };
 
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      setLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const locationUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+
+        try {
+          await axios.post("http://localhost:8080/alerts/email", {
+            userId: user.id,
+            message: `${message}\n\n Live Location: ${locationUrl}`,
+          });
+
+          alert("Emergency alert sent successfully!");
+        } catch (error) {
+          console.error("Error sending alert", error);
+        }
+        setLoading(false);
+      },
+      () => {
+        alert("Location access denied! Please enable GPS.");
+        setLoading(false);
+      }
+    );
+  };
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
