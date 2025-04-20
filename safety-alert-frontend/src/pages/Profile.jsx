@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { User, Mail, Shield, Save } from "lucide-react";
 
 const Profile = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -15,61 +16,111 @@ const Profile = () => {
         name,
         password,
       });
-      setMessage("Profile updated successfully!");
+
       const updatedUser = { ...user, name };
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
-      setMessage(res.data);
+      setMessage("Profile updated successfully!");
     } catch (error) {
       setMessage("Error updating profile.");
     }
   };
+
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Profile</h2>
-      {message && <p className="text-center text-purple-600 mt-2">{message}</p>}
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-lg">
+          <form onSubmit={handleUpdate} className="px-4 py-5 sm:p-6 space-y-8">
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Profile Settings
+            </h1>
 
-      <form onSubmit={handleUpdate} className="space-y-4">
-        <div className="mb-4">
-          <label className="font-medium">Email</label>
-          <input
-            type="email"
-            placeholder="Email"
-            value={user.email}
-            disabled
-            className="w-full px-4 py-2 border rounded bg-gray-100"
-          />
+            {message && (
+              <p className="text-center text-purple-600 font-medium -mt-4">
+                {message}
+              </p>
+            )}
+
+            {/* Personal Information Section */}
+            <div className="border-b border-gray-200 pb-8">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Personal Information
+              </h2>
+
+              <div className="grid grid-cols-1 gap-6">
+                {/* Name */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Full Name
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="form-input pl-10 w-full border rounded px-3 py-2"
+                      placeholder="Enter your name"
+                    />
+                    <User className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+
+                {/* Email (disabled) */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      type="email"
+                      value={user.email}
+                      disabled
+                      className="form-input pl-10 w-full border rounded bg-gray-100 px-3 py-2"
+                    />
+                    <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Security Section */}
+            <div className="border-b border-gray-200 pb-8">
+              <h2 className="text-lg font-medium text-gray-900 mb-4">
+                Security
+              </h2>
+
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    New Password (optional)
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="form-input pl-10 w-full border rounded px-3 py-2"
+                      placeholder="Enter new password"
+                    />
+                    <Shield className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-fuchsia-600 hover:bg-fuchsia-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fuchsia-500"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save Changes
+              </button>
+            </div>
+          </form>
         </div>
-
-        <div className="mb-4">
-          <label className="block font-medium">Name</label>
-          <input
-            type="text"
-            value={name}
-            placeholder="Enter Name"
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-2 border rounded bg-grey-100"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block font-medium">New Password (optional)</label>
-          <input
-            type="password"
-            value={password}
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 border rounded"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700"
-        >
-          Update Profile
-        </button>
-      </form>
+      </div>
     </div>
   );
 };
