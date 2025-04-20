@@ -1,55 +1,73 @@
 import { useState } from "react";
-import { Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import { User, Mail, Lock } from "lucide-react";
 
-const Login = () => {
+const Register = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError(null);
 
     try {
-      const response = await axios.post("http://localhost:8080/users/login", {
+      const res = await axios.post("http://localhost:8080/users/register", {
+        name,
         email,
         password,
       });
-      alert("Login successful!");
-      localStorage.setItem("user", JSON.stringify(response.data));
-      window.location.href = "/contacts";
-    } catch (err) {
-      console.error(err);
-      setError("Invalid email or password");
-    }
 
-    setLoading(false);
+      setMessage("Registration successful! Redirecting to login...");
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (error) {
+      setMessage("Registration failed! Email may already be in use.");
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-medium text-gray-900">
-          Sign in to your account
+          Create your account
         </h2>
         <p className="mt-2 text-center text-base text-gray-600">
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <Link
-            to="/register"
-            className="font-medium text-gray-600 hover:text-gray-500"
+            to="/login"
+            className="font-medium text-fuchsia-600 hover:text-fuchsia-500"
           >
-            Register
+            Sign in
           </Link>
         </p>
       </div>
 
-      <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleRegister} className="space-y-6">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Full Name
+              </label>
+              <div className="mt-1 relative">
+                <input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="form-input pl-10 w-full border rounded px-3 py-2"
+                  placeholder="Enter your name"
+                />
+                <User className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+              </div>
+            </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -90,32 +108,20 @@ const Login = () => {
                 />
                 <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
               </div>
-              <div className="text-sm text-right mt-2">
-                <a
-                  href="#"
-                  className="font-medium text-fuchsia-600 hover:text-fuchsia-500"
-                >
-                  Forgot your password?
-                </a>
-              </div>
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600 text-center -mt-2">{error}</p>
+            {message && (
+              <p className="text-sm text-center text-purple-600 -mt-2">
+                {message}
+              </p>
             )}
 
             <div>
               <button
                 type="submit"
-                disabled={loading}
-                className={`w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-sm font-medium text-white 
-                  ${
-                    loading
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-fuchsia-600 hover:bg-fuchsia-700"
-                  }`}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-fuchsia-600 hover:bg-fuchsia-700"
               >
-                {loading ? "Logging in..." : "Sign in"}
+                Register
               </button>
             </div>
           </form>
@@ -125,4 +131,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

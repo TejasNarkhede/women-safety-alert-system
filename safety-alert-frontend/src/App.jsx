@@ -5,12 +5,15 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import Home from "./pages/Home";
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Contacts from "./pages/Contacts";
 import SendAlert from "./pages/SendAlert";
 import AlertHistory from "./pages/AlertHistory";
-import Profile from "./pages/Profile"
+import Profile from "./pages/Profile";
+// import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -27,46 +30,54 @@ const App = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-700">
+      <div className="min-h-screen flex flex-col bg-gray-50">
         <Navbar user={user} setUser={setUser} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/contacts"
-            element={
-              <ProtectedRoute user={user}>
-                <Contacts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/send-alert"
-            element={
-              <ProtectedRoute user={user}>
-                <SendAlert />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <ProtectedRoute user={user}>
-                <AlertHistory />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute user={user}>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login setUser={setUser} />} />
+            <Route path="/register" element={<Register />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/contacts"
+              element={
+                <ProtectedRoute user={user}>
+                  <Contacts />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/send-alert"
+              element={
+                <ProtectedRoute user={user}>
+                  <SendAlert />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/alert-history"
+              element={
+                <ProtectedRoute user={user}>
+                  <AlertHistory />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute user={user}>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            {/* <Route path="*" element={<NotFound />} /> */}
+          </Routes>
+        </main>
+
+        <Footer />
       </div>
-      <Footer />
     </Router>
   );
 };
