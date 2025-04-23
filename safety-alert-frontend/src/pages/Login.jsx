@@ -19,7 +19,7 @@ const Login = () => {
         email,
         password,
       });
-      alert("Login successful!");
+      // alert("Login successful!");
       localStorage.setItem("user", JSON.stringify(response.data));
       window.location.href = "/contacts";
     } catch (err) {
@@ -40,7 +40,7 @@ const Login = () => {
           Don't have an account?{" "}
           <Link
             to="/register"
-            className="font-medium text-gray-600 hover:text-gray-500"
+            className="font-medium text-fuchsia-600 hover:text-fuchsia-500"
           >
             Register
           </Link>
@@ -91,12 +91,9 @@ const Login = () => {
                 <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
               </div>
               <div className="text-sm text-right mt-2">
-                <a
-                  href="#"
-                  className="font-medium text-fuchsia-600 hover:text-fuchsia-500"
-                >
+                <Link to="/forgot-password" className="font-medium text-gray-600 hover:text-gray-500">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
 
