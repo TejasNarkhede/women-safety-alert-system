@@ -13,6 +13,7 @@ import Contacts from "./pages/Contacts";
 import SendAlert from "./pages/SendAlert";
 import AlertHistory from "./pages/AlertHistory";
 import Profile from "./pages/Profile";
+import ForgotPassword from "./pages/ForgotPassword";
 // import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -38,6 +39,7 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login setUser={setUser} />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
 
             {/* Protected Routes */}
             <Route
