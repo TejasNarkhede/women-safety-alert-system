@@ -15,7 +15,11 @@ const AlertHistory = () => {
       const response = await axios.get(
         `http://localhost:8080/alerts/history/${user.id}`
       );
-      setAlerts(response.data);
+      // Sort alerts by timestamp in descending order (newest first)
+      const sortedAlerts = response.data.sort((a, b) => 
+        new Date(b.timestamp) - new Date(a.timestamp)
+      );
+      setAlerts(sortedAlerts);
     } catch (error) {
       console.error("Error fetching alert history", error);
     }
