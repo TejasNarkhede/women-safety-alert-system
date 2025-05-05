@@ -29,7 +29,7 @@ const SendAlert = () => {
       try {
         await axios.post("http://localhost:8080/alerts/email", {
           userId: user.id,
-          message: `${message}\n\nLocation: ${locationUrl}`,
+          message: `${message}\nLocation: ${locationUrl}`,
         });
 
         alert("Emergency alert sent successfully!");
@@ -68,7 +68,7 @@ const SendAlert = () => {
             <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start">
              <MapPin className="h-5 w-5 text-red-600 mt-0.5" />
               <div className="ml-3">
-                <h3 className="text-sm font-medium text-red-800">Location Services</h3>
+                <h3 className="text-sm font-medium text-red-800">Turn on Location Services</h3>
                 
                 <p className="text-sm text-red-700">
                   Your current location will be automatically included
