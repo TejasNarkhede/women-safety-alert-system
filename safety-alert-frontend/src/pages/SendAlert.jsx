@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapPin, Send } from "lucide-react";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const SendAlert = () => {
   const [contacts, setContacts] = useState([]);
@@ -14,7 +15,7 @@ const SendAlert = () => {
 
   const fetchContacts = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/contacts/${user.id}`);
+      const response = await axios.get(`${API_URL}/contacts/${user.id}`);
       setContacts(response.data);
     } catch (error) {
       console.error("Error fetching contacts", error);
@@ -27,7 +28,7 @@ const SendAlert = () => {
 
     const sendAlertWithLocation = async (locationUrl = "Location could not be obtained") => {
       try {
-        await axios.post("http://localhost:8080/alerts/email", {
+        await axios.post(`${API_URL}/alerts/email`, {
           userId: user.id,
           message: `${message}\nLocation: ${locationUrl}`,
         });

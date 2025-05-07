@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Phone, Mail, Trash2, UserPlus } from "lucide-react";
+import { API_URL } from "../config";
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
@@ -16,7 +17,7 @@ const Contacts = () => {
   const fetchContacts = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/contacts/${user.id}`
+        `${API_URL}/contacts/${user.id}`
       );
       setContacts(response.data);
     } catch (error) {
@@ -28,7 +29,7 @@ const Contacts = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:8080/contacts/add", {
+      await axios.post(`${API_URL}/contacts/add`, {
         userId: user.id,
         contactName,
         contactEmail,
@@ -44,7 +45,7 @@ const Contacts = () => {
 
   const deleteContact = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/contacts/delete/${id}`);
+      await axios.delete(`${API_URL}/contacts/delete/${id}`);
       fetchContacts();
     } catch (error) {
       console.error("Error deleting contact", error);

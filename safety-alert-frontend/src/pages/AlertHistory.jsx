@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Calendar, MapPin, MessageSquare } from "lucide-react";
+import { API_URL } from "../config";
 
 const AlertHistory = () => {
   const [alerts, setAlerts] = useState([]);
@@ -13,7 +14,7 @@ const AlertHistory = () => {
   const fetchAlertHistory = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/alerts/history/${user.id}`
+        `${API_URL}/alerts/history/${user.id}`
       );
       // Sort alerts by timestamp in descending order (newest first)
       const sortedAlerts = response.data.sort((a, b) => 
