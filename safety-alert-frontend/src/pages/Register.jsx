@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { User, Mail, Lock } from "lucide-react";
+import { API_URL } from "../config";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -14,7 +15,7 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8080/users/register", {
+      const res = await axios.post(`${API_URL}/users/register`, {
         name,
         email,
         password,

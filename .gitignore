@@ -3,6 +3,8 @@ node_modules/
 
 # dotenv environment variables file
 .env
+safety-alert-frontend/.env
+safety-alert-backend/.env
 
 # VS Code
 .vscode/

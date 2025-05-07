@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ const Login = () => {
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:8080/users/login", {
+      const response = await axios.post(`${API_URL}/users/login`, {
         email,
         password,
       });

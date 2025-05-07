@@ -10,7 +10,6 @@ import com.tejas.safetyalertbackend.service.EmergencyContactService;
 
 @RestController
 @RequestMapping("/contacts")
-@CrossOrigin(origins = "http://localhost:5173")
 public class EmergencyContactController {
 
     private final EmergencyContactService contactService;

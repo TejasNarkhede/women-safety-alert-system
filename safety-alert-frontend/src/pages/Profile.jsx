@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { User, Mail, Shield, Save } from "lucide-react";
+import { API_URL } from "../config";
 
 const Profile = () => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -11,7 +12,7 @@ const Profile = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.put("http://localhost:8080/users/update", {
+      const res = await axios.put(`${API_URL}/users/update`, {
         email: user.email,
         name,
         password,
