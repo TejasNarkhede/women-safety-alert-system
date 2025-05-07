@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/alerts")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AlertController {
 
     private final AlertService alertService;
